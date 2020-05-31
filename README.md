@@ -48,6 +48,7 @@ The pages to be rendered inside a modal, needs to follow the same structure than
   "config": {
     "next-modal-pages-loader": {
       "searchDir": ["./modalPages/pages"],
+      "loaderDir": "./modalPages/loaderComponent.jsx",
       "pattern": "**/*.js",
       "outputFile": "./modalPages/routes.js"
     }
