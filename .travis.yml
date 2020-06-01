@@ -12,7 +12,7 @@ jobs:
   include:
     - stage: test
       script:
-        npm run ci
+        - npm run ci
     # Define the release stage that runs semantic-release
     - stage: release
       node_js: lts/*
