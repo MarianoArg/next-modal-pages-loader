@@ -60,14 +60,20 @@ const ensureFileDirectoryExists = filePath => {
 };
 
 /**
- * Check if the specified filePath exists
+ * Reduce a filePath into a component name
  *
- * @param {String} filePath - Path to a file
+ * @param {String} filePath - path to be parsed to a component name.
  */
-const checkIfFileExist = filePath => {
-  const directory = path.dirname(filePath);
 
-  return fs.existsSync(directory);
+const getComponentName = filePath => {
+  return filePath
+    .split('/')
+    .slice(-3)
+    .map(str => {
+      const cleaned = str.replace(/[^a-zA-Z]+/g, '');
+      return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+    })
+    .join('');
 };
 
 /**
@@ -89,14 +95,7 @@ const getPageData = (file, fromDir) => {
       base: baseName !== 'index' ? baseName : '',
     })
     .replace(reg, '');
-  const componentName = url
-    .split('/')
-    .slice(-3)
-    .map(str => {
-      const cleaned = str.replace(/[^a-zA-Z]+/g, '');
-      return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
-    })
-    .join('');
+  const componentName = getComponentName(url);
   return {
     relativePath,
     baseName,
@@ -109,5 +108,6 @@ module.exports = {
   getRelativePath,
   ensureFileDirectoryExists,
   formatPath,
+  getComponentName,
   getPageData,
 };

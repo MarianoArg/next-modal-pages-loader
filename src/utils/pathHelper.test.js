@@ -8,6 +8,8 @@ const {
   getRelativePath,
   formatPath,
   ensureFileDirectoryExists,
+  getComponentName,
+  getPageData,
 } = require('./pathHelper');
 
 afterEach(() => mockfs.restore());
@@ -191,5 +193,51 @@ describe('ensureFileDirectoryExists()', () => {
     ensureFileDirectoryExists(sourceFile);
 
     expect(fs.existsSync(expectedPath)).toBe(true);
+  });
+});
+
+describe('getComponentName()', () => {
+  it('should build the component name, ', () => {
+    const relativePath = './modalPages/pages/user/about';
+    const expected = 'PagesUserAbout';
+    const actual = getComponentName(relativePath);
+
+    expect(actual).toEqual(expected);
+  });
+});
+
+describe('getPageData()', () => {
+  it('should build the page data and resolve when a folder has an index', () => {
+    const file = {
+      baseDir: './src/components',
+      file: '/users/jhondoe/dev/app/src/components/user/profile/index.js',
+    };
+    const fromDir = '/users/jhondoe/dev/app/routes/output.js';
+    const actual = getPageData(file, fromDir);
+    const expected = {
+      relativePath: '../../src/components/user/profile/index.js',
+      baseName: 'index',
+      url: '/user/profile',
+      componentName: 'UserProfile',
+    };
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should build the page data', () => {
+    const file = {
+      baseDir: './src/modalPages',
+      file: '/users/jhondoe/dev/app/src/modalPages/blog/post/[id].js',
+    };
+    const fromDir = '/users/jhondoe/dev/app/routes/output.js';
+    const actual = getPageData(file, fromDir);
+    const expected = {
+      relativePath: '../../src/modalPages/blog/post/[id].js',
+      baseName: '[id]',
+      url: '/blog/post/[id]',
+      componentName: 'BlogPostId',
+    };
+
+    expect(actual).toEqual(expected);
   });
 });

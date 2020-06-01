@@ -21,6 +21,11 @@ const cliResolver = yargv => {
   if (yargv.pattern) {
     config.pattern = yargv.pattern;
   }
+
+  if (yargv.loaderDir) {
+    config.loaderDir = yargv.loaderDir;
+  }
+
   logger.debug('cliResolver:return', config);
   return config;
 };

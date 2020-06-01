@@ -13,15 +13,32 @@ test('writeOutPageLoader should perform expected work', () => {
   const config = {
     outputFiles: [
       {
+        loaderDir: faker.system.fileName(),
         outputFile: faker.system.fileName(),
-        patterns: [faker.system.fileName(), faker.system.fileName()],
+        patterns: [
+          {
+            base: faker.system.filePath(),
+            pattern: faker.system.fileName(),
+          },
+          {
+            base: faker.system.filePath(),
+            pattern: faker.system.fileName(),
+          },
+        ],
       },
       {
+        loaderDir: faker.system.fileName(),
         outputFile: faker.system.fileName(),
-        patterns: [faker.system.fileName()],
+        patterns: [
+          {
+            base: faker.system.filePath(),
+            pattern: faker.system.fileName(),
+          },
+        ],
       },
     ],
   };
+
   const firstFiles = generateArray(faker.system.fileName);
   const secondFiles = generateArray(faker.system.fileName);
   const noFiles = [];
@@ -34,21 +51,26 @@ test('writeOutPageLoader should perform expected work', () => {
   writeOutPageLoader(config);
 
   expect(pageFinder.loadPages).toHaveBeenCalledWith(
-    config.outputFiles[0].patterns[0]
+    config.outputFiles[0].patterns[0].base,
+    config.outputFiles[0].patterns[0].pattern
   );
   expect(pageFinder.loadPages).toHaveBeenCalledWith(
-    config.outputFiles[0].patterns[1]
+    config.outputFiles[0].patterns[1].base,
+    config.outputFiles[0].patterns[1].pattern
   );
   expect(pageFinder.loadPages).toHaveBeenCalledWith(
-    config.outputFiles[1].patterns[0]
+    config.outputFiles[1].patterns[0].base,
+    config.outputFiles[1].patterns[0].pattern
   );
 
   expect(writer.writeFile).toHaveBeenCalledWith(
     firstFiles.concat(secondFiles).sort(),
-    config.outputFiles[0].outputFile
+    config.outputFiles[0].outputFile,
+    config.outputFiles[0].loaderDir
   );
   expect(writer.writeFile).toHaveBeenCalledWith(
     noFiles.concat().sort(),
-    config.outputFiles[1].outputFile
+    config.outputFiles[1].outputFile,
+    config.outputFiles[1].loaderDir
   );
 });

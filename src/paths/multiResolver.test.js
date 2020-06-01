@@ -3,8 +3,9 @@ const mock = require('mock-fs');
 
 const { appName } = require('../constants');
 const resolvePaths = require('./multiResolver');
+jest.mock('../logger');
 
-function generatePackageJson(searchDir, pattern, outputFile) {
+function generatePackageJson(searchDir, pattern, outputFile, loaderDir) {
   return {
     config: {
       [appName]: {
@@ -31,8 +32,14 @@ test('should resolve expected defaults', () => {
   const expected = {
     outputFiles: [
       {
-        patterns: [path.resolve(baseDir, './modalPages/pages/index.js')],
+        patterns: [
+          {
+            base: './',
+            pattern: path.resolve(baseDir, './modalPages/pages/index.js'),
+          },
+        ],
         outputFile: path.resolve(baseDir, './modalPages/routes.js'),
+        loaderDir: '',
       },
     ],
   };
@@ -44,16 +51,23 @@ test('should resolve expected defaults', () => {
 
 test('should resolve expected paths with single search dir', () => {
   const packageJsonContents = generatePackageJson(
-    './src/storybook',
-    '**/*.stories.js',
-    './storybook/config.js'
+    './src/modalPages/pages',
+    '**/*.jsx',
+    './config/routes.js',
+    './components/loaders/default.js'
   );
   mock({ [packageJsonFilePath]: JSON.stringify(packageJsonContents) });
   const expected = {
     outputFiles: [
       {
-        patterns: [path.resolve(baseDir, './src/storybook/**/*.stories.js')],
-        outputFile: path.resolve(baseDir, './storybook/config.js'),
+        patterns: [
+          {
+            base: './src/modalPages/pages',
+            pattern: path.resolve(baseDir, './src/modalPages/pages/**/*.jsx'),
+          },
+        ],
+        outputFile: path.resolve(baseDir, './config/routes.js'),
+        loaderDir: path.resolve(baseDir, './components/loaders/default.js'),
       },
     ],
   };
@@ -65,9 +79,10 @@ test('should resolve expected paths with single search dir', () => {
 
 test('should resolve expected paths with multiple search dirs', () => {
   const packageJsonContents = generatePackageJson(
-    ['./src/storybook', './packages'],
-    '**/*.stories.js',
-    './storybook/config.js'
+    ['./src/modalPages', './components/pages'],
+    '**/*.js',
+    './config/pages.js',
+    './components/loader.js'
   );
 
   mock({ [packageJsonFilePath]: JSON.stringify(packageJsonContents) });
@@ -75,10 +90,17 @@ test('should resolve expected paths with multiple search dirs', () => {
     outputFiles: [
       {
         patterns: [
-          path.resolve(baseDir, './src/storybook/**/*.stories.js'),
-          path.resolve(baseDir, './packages/**/*.stories.js'),
+          {
+            base: './src/modalPages',
+            pattern: path.resolve(baseDir, './src/modalPages/**/*.js'),
+          },
+          {
+            base: './components/pages',
+            pattern: path.resolve(baseDir, './components/pages/**/*.js'),
+          },
         ],
-        outputFile: path.resolve(baseDir, './storybook/config.js'),
+        loaderDir: path.resolve(baseDir, './components/loader.js'),
+        outputFile: path.resolve(baseDir, './config/pages.js'),
       },
     ],
   };
@@ -90,15 +112,17 @@ test('should resolve expected paths with multiple search dirs', () => {
 
 test('should resolve expected paths with cli configs', () => {
   const packageJsonContents = generatePackageJson(
-    ['./src/storybook', './packages'],
-    '**/*.stories.js',
-    './storybook/config.js'
+    ['./src/modalPages/pages', './src/secondaryPages/'],
+    '**/*.js',
+    './modalPages/routes.js',
+    './modalPages/loader.js'
   );
 
   const cliConfig = {
-    searchDir: ['./src', './package/pkg1'],
+    searchDir: ['./src/modalPages/pages', './src/secondaryPages'],
     pattern: '*.js',
-    outputFile: './storyLoader.js',
+    loaderDir: './modalPages/loader.js',
+    outputFile: './modalPages/routes.js',
   };
 
   mock({ [packageJsonFilePath]: JSON.stringify(packageJsonContents) });
@@ -106,10 +130,17 @@ test('should resolve expected paths with cli configs', () => {
     outputFiles: [
       {
         patterns: [
-          path.resolve(baseDir, './src/*.js'),
-          path.resolve(baseDir, './package/pkg1/*.js'),
+          {
+            base: './src/modalPages/pages',
+            pattern: path.resolve(baseDir, './src/modalPages/pages/*.js'),
+          },
+          {
+            base: './src/secondaryPages',
+            pattern: path.resolve(baseDir, './src/secondaryPages/*.js'),
+          },
         ],
-        outputFile: path.resolve(baseDir, './storyLoader.js'),
+        loaderDir: path.resolve(baseDir, './modalPages/loader.js'),
+        outputFile: path.resolve(baseDir, './modalPages/routes.js'),
       },
     ],
   };

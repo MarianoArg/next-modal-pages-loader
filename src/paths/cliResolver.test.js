@@ -97,3 +97,17 @@ test('cliResolver should pattern, outputFile and searchDir (string) when specifi
 
   expect(actual).toEqual(expected);
 });
+
+test('cliResolver should pattern, outputFile and, loaderDir (string) and searchDir (string) when specified', () => {
+  const yargv = {
+    pattern: faker.system.fileName(),
+    searchDir: faker.system.fileName(),
+    outputFile: faker.system.fileName(),
+    loaderDir: faker.system.fileName(),
+  };
+  const expected = Object.assign({}, yargv, { searchDir: [yargv.searchDir] });
+
+  const actual = cliResolver(yargv);
+
+  expect(actual).toEqual(expected);
+});
