@@ -1,6 +1,6 @@
 {
   "name": "next-modal-pages-loader",
-  "version": "1.0.0-development",
+  "version": "1.0.0",
   "repository": "https://github.com/MarianoArg/next-modal-pages-loader.git",
   "bugs": "https://github.com/MarianoArg/next-modal-pages-loader/issues",
   "author": "Marian Argañaras <arga.mariano@gmail.com>",
@@ -48,7 +48,7 @@
       "**/*.{js,jsx}",
       "!**/node_modules/**",
       "!**/vendor/**",
-      "!**/output/**",
+      "!**/modalPages/**",
       "!**/coverage/**"
     ],
     "coverageDirectory": "./coverage/"
