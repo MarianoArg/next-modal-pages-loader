@@ -10,6 +10,20 @@ _Note:_ This is a fork of the [react-native-storybook](https://github.com/storyb
 
 Comming soon
 
+## How to use it
+
+Install it and add the folder where your modal pages are located in, after run it, a new file with a [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) with the following format will be generated:
+
+```json 
+const PageRoutes = new Map();
+
+PageRoutes.set({RegExp}, {Component});
+
+export default PageRoutes;
+```
+
+You can build a function which iterates over the map and evaluate each regex, to get the component
+
 ## Installation
 
 ```bash
