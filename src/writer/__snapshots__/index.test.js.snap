@@ -9,25 +9,25 @@ import Loader from './components/loaders/loader';
 
 const PageRoutes = new Map();
 
-// ./src/file1
+// Src/File
 const SrcFile = dynamic(() => import('./src/file1'), { loading: () => <Loader /> });
-PageRoutes.set('./src/file1', <SrcFile />);
+PageRoutes.set(/(\\\\/.\\\\/src\\\\/file1\\\\/?$)/, <SrcFile />);
 
-// src/sub/file2
+// Src/Sub/File
 const SrcSubFile = dynamic(() => import('./src/sub/file2'), { loading: () => <Loader /> });
-PageRoutes.set('./src/sub/file2', <SrcSubFile />);
+PageRoutes.set(/(\\\\/.\\\\/src\\\\/sub\\\\/file2\\\\/?$)/, <SrcSubFile />);
 
-// ./parent/file3
+// Parent/File
 const ParentFile = dynamic(() => import('./parent/file3'), { loading: () => <Loader /> });
-PageRoutes.set('./parent/file3', <ParentFile />);
+PageRoutes.set(/(\\\\/.\\\\/parent\\\\/file3\\\\/?$)/, <ParentFile />);
 
-// writer/sub/file4
+// Writer/Sub/File
 const WriterSubFile = dynamic(() => import('./src/writer/sub/file4'), { loading: () => <Loader /> });
-PageRoutes.set('./src/writer/sub/file4', <WriterSubFile />);
+PageRoutes.set(/(\\\\/.\\\\/src\\\\/writer\\\\/sub\\\\/file4\\\\/?$)/, <WriterSubFile />);
 
-// sub/sub/file5
+// Sub/Sub/File
 const SubSubFile = dynamic(() => import('./src/writer/sub/sub/file5'), { loading: () => <Loader /> });
-PageRoutes.set('./src/writer/sub/sub/file5', <SubSubFile />);
+PageRoutes.set(/(\\\\/.\\\\/src\\\\/writer\\\\/sub\\\\/sub\\\\/file5\\\\/?$)/, <SubSubFile />);
 
 export default PageRoutes;
 "

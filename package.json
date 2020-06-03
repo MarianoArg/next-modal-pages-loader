@@ -1,6 +1,6 @@
 {
   "name": "next-modal-pages-loader",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "repository": "https://github.com/MarianoArg/next-modal-pages-loader.git",
   "bugs": "https://github.com/MarianoArg/next-modal-pages-loader/issues",
   "author": "Marian Argañaras <arga.mariano@gmail.com>",
@@ -17,7 +17,7 @@
     "mock-fs": "^4.4.1",
     "npm-run-all": "^4.1.2",
     "prettier": "^1.5.3",
-    "semantic-release": "^15.13.24",
+    "semantic-release": "^17.0.8",
     "uuid": "^3.0.1"
   },
   "dependencies": {
@@ -59,7 +59,7 @@
         "./modalPages/pages"
       ],
       "pattern": "**/*.js",
-      "outputFile": "./modalPages/routes.js"
+      "outputFile": "./modal_pages/routes.js"
     }
   }
 }

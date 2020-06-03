@@ -35,14 +35,15 @@ ${formatter(
   files,
   ({ url, relativePath, componentName }) =>
     `
-// ${url
-      .split('/')
+// ${componentName
+      .split(/([A-Z][^A-Z]+)/)
+      .filter(Boolean)
       .slice(-3)
-      .join('/')}
+      .join(`/`)}
 const ${componentName} = dynamic(() => import('${relativePath}')${
       loaderDir ? `, { loading: () => <Loader /> }` : ''
     });
-PageRoutes.set('${url}', <${componentName} />);`,
+PageRoutes.set(${url}, <${componentName} />);`,
   '\n'
 )}
 

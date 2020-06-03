@@ -217,7 +217,7 @@ describe('getPageData()', () => {
     const expected = {
       relativePath: '../../src/components/user/profile/index.js',
       baseName: 'index',
-      url: '/user/profile',
+      url: /(\/\/user\/profile\/?$)/,
       componentName: 'UserProfile',
     };
 
@@ -234,7 +234,7 @@ describe('getPageData()', () => {
     const expected = {
       relativePath: '../../src/modalPages/blog/post/[id].js',
       baseName: '[id]',
-      url: '/blog/post/[id]',
+      url: /(\/\/blog\/post\/)([a-zA-Z0-9]+\/?)$/,
       componentName: 'BlogPostId',
     };
 

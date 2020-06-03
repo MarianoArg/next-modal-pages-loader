@@ -77,6 +77,32 @@ const getComponentName = filePath => {
 };
 
 /**
+ * Build a URL regex from an URI
+ *
+ * @param {String} uri - url to be parsed as a regex
+ */
+
+const getPageUrl = uri =>
+  uri
+    .split('/')
+    .map((str, index, arr) => {
+      if (str.startsWith('[') && str.endsWith(']')) {
+        if (index === arr.length - 1) {
+          return `)([a-zA-Z0-9]+\/?)$`;
+        }
+        return `)([a-zA-Z0-9]+\\/`;
+      }
+      if (index === 0) {
+        return `(\\/${str}\\/`;
+      }
+      if (index === arr.length - 1) {
+        return `${str}\\/?$)`;
+      }
+      return `${str}\\/`;
+    })
+    .join('');
+
+/**
  * Converts a path into a relative path
  *
  * @param {String} file - File to convert to a relative path
@@ -86,16 +112,21 @@ const getComponentName = filePath => {
 
 const getPageData = (file, fromDir) => {
   const relativePath = getRelativePath(file.file, fromDir);
-  const reg = new RegExp(`(.*${file.baseDir})|\/$`, 'g');
+  const baseDir = file.baseDir.split('/');
+  const reg = new RegExp(`(.*?\\/${baseDir[baseDir.length - 1]})`);
   const { base, dir, name, ext } = path.parse(relativePath);
   const baseName = path.basename(base, ext);
-  const url = path
+  const uri = path
     .format({
       dir,
       base: baseName !== 'index' ? baseName : '',
     })
-    .replace(reg, '');
-  const componentName = getComponentName(url);
+    .replace(reg, '')
+    .replace(/\/$/g, '');
+
+  const componentName = getComponentName(uri);
+  const url = new RegExp(getPageUrl(uri));
+
   return {
     relativePath,
     baseName,
@@ -105,6 +136,7 @@ const getPageData = (file, fromDir) => {
 };
 
 module.exports = {
+  getPageUrl,
   getRelativePath,
   ensureFileDirectoryExists,
   formatPath,
