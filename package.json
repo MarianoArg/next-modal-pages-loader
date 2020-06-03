@@ -49,6 +49,7 @@
       "!**/node_modules/**",
       "!**/vendor/**",
       "!**/modalPages/**",
+      "!**/modal_pages/**",
       "!**/coverage/**"
     ],
     "coverageDirectory": "./coverage/"
