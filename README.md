@@ -17,7 +17,7 @@ Install it and add the folder where your modal pages are located in, after run i
 ```json 
 const PageRoutes = new Map();
 
-PageRoutes.set({RegExp}, {Component});
+PageRoutes.set(<RegExp>, <Component>);
 
 export default PageRoutes;
 ```
