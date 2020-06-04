@@ -11,23 +11,23 @@ const PageRoutes = new Map();
 
 // Src/File
 const SrcFile = dynamic(() => import('./src/file1'), { loading: () => <Loader /> });
-PageRoutes.set(/(\\\\/.\\\\/src\\\\/file1\\\\/?$)/, <SrcFile />);
+PageRoutes.set(/(^\\\\/?.\\\\/src\\\\/file1\\\\/?$)/, <SrcFile />);
 
 // Src/Sub/File
 const SrcSubFile = dynamic(() => import('./src/sub/file2'), { loading: () => <Loader /> });
-PageRoutes.set(/(\\\\/.\\\\/src\\\\/sub\\\\/file2\\\\/?$)/, <SrcSubFile />);
+PageRoutes.set(/(^\\\\/?.\\\\/src\\\\/sub\\\\/file2\\\\/?$)/, <SrcSubFile />);
 
 // Parent/File
 const ParentFile = dynamic(() => import('./parent/file3'), { loading: () => <Loader /> });
-PageRoutes.set(/(\\\\/.\\\\/parent\\\\/file3\\\\/?$)/, <ParentFile />);
+PageRoutes.set(/(^\\\\/?.\\\\/parent\\\\/file3\\\\/?$)/, <ParentFile />);
 
 // Writer/Sub/File
 const WriterSubFile = dynamic(() => import('./src/writer/sub/file4'), { loading: () => <Loader /> });
-PageRoutes.set(/(\\\\/.\\\\/src\\\\/writer\\\\/sub\\\\/file4\\\\/?$)/, <WriterSubFile />);
+PageRoutes.set(/(^\\\\/?.\\\\/src\\\\/writer\\\\/sub\\\\/file4\\\\/?$)/, <WriterSubFile />);
 
 // Sub/Sub/File
 const SubSubFile = dynamic(() => import('./src/writer/sub/sub/file5'), { loading: () => <Loader /> });
-PageRoutes.set(/(\\\\/.\\\\/src\\\\/writer\\\\/sub\\\\/sub\\\\/file5\\\\/?$)/, <SubSubFile />);
+PageRoutes.set(/(^\\\\/?.\\\\/src\\\\/writer\\\\/sub\\\\/sub\\\\/file5\\\\/?$)/, <SubSubFile />);
 
 
 /**

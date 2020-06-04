@@ -87,13 +87,19 @@ const getPageUrl = uri =>
     .split('/')
     .map((str, index, arr) => {
       if (str.startsWith('[') && str.endsWith(']')) {
+        if (arr.length === 1) {
+          return `(^\/?[a-zA-Z0-9]+\/?)$`;
+        }
         if (index === arr.length - 1) {
           return `)([a-zA-Z0-9]+\/?)$`;
         }
         return `)([a-zA-Z0-9]+\\/`;
       }
+      if (arr.length === 1) {
+        return `(^\/?${str}\\/?$)`;
+      }
       if (index === 0) {
-        return `(\\/${str}\\/`;
+        return `(^\/?${str}\\/`;
       }
       if (index === arr.length - 1) {
         return `${str}\\/?$)`;
@@ -122,8 +128,7 @@ const getPageData = (file, fromDir) => {
       base: baseName !== 'index' ? baseName : '',
     })
     .replace(reg, '')
-    .replace(/\/$/g, '');
-
+    .replace(/^\/|\/$/g, '');
   const componentName = getComponentName(uri);
   const url = new RegExp(getPageUrl(uri));
 
