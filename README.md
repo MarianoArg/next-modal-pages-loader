@@ -22,7 +22,7 @@ PageRoutes.set({RegExp}, {Component});
 export default PageRoutes;
 ```
 
-You can build a function which iterates over the map and evaluate each regex, to get the component
+You can build a function which iterates over the map and evaluates each regex, to get the component
 
 ## Installation
 

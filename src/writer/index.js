@@ -47,7 +47,26 @@ PageRoutes.set(${url}, <${componentName} />);`,
   '\n'
 )}
 
+
+/**
+ * Evaluates a given path with the RegEx to find a component
+ *
+ * @param {String} path - Url to be evaluated
+ */
+
+function getPageComponent(path) {
+  let component = null;
+  for (const [re, val] of PageRoutes.entries()) {
+    if(re.exec(path)) {
+      component = val
+      break;
+    }
+  }
+  return component;
+}
+
 export default PageRoutes;
+export { getPageComponent };
 `;
 
 const writeFile = (files, outputFile, loaderDir) => {
