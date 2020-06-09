@@ -14,8 +14,8 @@ const cliResolver = yargv => {
     config.searchDir = [yargv.searchDir];
   }
 
-  if (yargv.outputFile) {
-    config.outputFile = yargv.outputFile;
+  if (yargv.outputDir) {
+    config.outputDir = yargv.outputDir;
   }
 
   if (yargv.pattern) {

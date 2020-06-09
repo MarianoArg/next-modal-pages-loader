@@ -33,17 +33,19 @@ ${loaderDir && `import Loader from '${loaderDir}';`}
 const PageRoutes = new Map();
 ${formatter(
   files,
-  ({ url, relativePath, componentName }) =>
+  ({ url, relativePath, componentName, isDynamic }) =>
     `
 // ${componentName
       .split(/([A-Z][^A-Z]+)/)
       .filter(Boolean)
       .slice(-3)
       .join(`/`)}
-const ${componentName} = dynamic(() => import('${relativePath}')${
+
+PageRoutes.set(function(url) {
+  ${isDynamic ? `return ${url}.exec(url)` : `url === ${url}`}
+}, dynamic(() => import('${relativePath}')${
       loaderDir ? `, { loading: () => <Loader /> }` : ''
-    });
-PageRoutes.set(${url}, <${componentName} />);`,
+    }));`,
   '\n'
 )}
 
@@ -54,10 +56,10 @@ PageRoutes.set(${url}, <${componentName} />);`,
  * @param {String} path - Url to be evaluated
  */
 
-function getPageComponent(path) {
+async function getPageComponent(path) {
   let component = null;
-  for (const [re, val] of PageRoutes.entries()) {
-    if(re.exec(path)) {
+  for await (const [re, val] of PageRoutes.entries()) {
+    if(re(path)) {
       component = val
       break;
     }
@@ -70,6 +72,7 @@ export { getPageComponent };
 `;
 
 const writeFile = (files, outputFile, loaderDir) => {
+  //console.log('files ', files)
   const pages = getPageStructure(path.dirname(outputFile), files).map(file => ({
     ...file,
     relativePath: file.relativePath.substring(
@@ -82,6 +85,7 @@ const writeFile = (files, outputFile, loaderDir) => {
     ? getRelativePath(loaderDir, path.dirname(outputFile))
     : '';
 
+  //console.log('pages ', pages)
   const output = template(
     pages,
     loaderFile.substring(0, loaderFile.lastIndexOf('.'))

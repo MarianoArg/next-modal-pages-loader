@@ -10,24 +10,34 @@ import Loader from './components/loaders/loader';
 const PageRoutes = new Map();
 
 // Src/File
-const SrcFile = dynamic(() => import('./src/file1'), { loading: () => <Loader /> });
-PageRoutes.set(/(^\\\\/?.\\\\/src\\\\/file1\\\\/?$)/, <SrcFile />);
+
+PageRoutes.set(function(url) {
+  url === './src/file1'
+}, dynamic(() => import('./src/file1'), { loading: () => <Loader /> }));
 
 // Src/Sub/File
-const SrcSubFile = dynamic(() => import('./src/sub/file2'), { loading: () => <Loader /> });
-PageRoutes.set(/(^\\\\/?.\\\\/src\\\\/sub\\\\/file2\\\\/?$)/, <SrcSubFile />);
+
+PageRoutes.set(function(url) {
+  url === './src/sub/file2'
+}, dynamic(() => import('./src/sub/file2'), { loading: () => <Loader /> }));
 
 // Parent/File
-const ParentFile = dynamic(() => import('./parent/file3'), { loading: () => <Loader /> });
-PageRoutes.set(/(^\\\\/?.\\\\/parent\\\\/file3\\\\/?$)/, <ParentFile />);
+
+PageRoutes.set(function(url) {
+  url === './parent/file3'
+}, dynamic(() => import('./parent/file3'), { loading: () => <Loader /> }));
 
 // Writer/Sub/File
-const WriterSubFile = dynamic(() => import('./src/writer/sub/file4'), { loading: () => <Loader /> });
-PageRoutes.set(/(^\\\\/?.\\\\/src\\\\/writer\\\\/sub\\\\/file4\\\\/?$)/, <WriterSubFile />);
+
+PageRoutes.set(function(url) {
+  url === './src/writer/sub/file4'
+}, dynamic(() => import('./src/writer/sub/file4'), { loading: () => <Loader /> }));
 
 // Sub/Sub/File
-const SubSubFile = dynamic(() => import('./src/writer/sub/sub/file5'), { loading: () => <Loader /> });
-PageRoutes.set(/(^\\\\/?.\\\\/src\\\\/writer\\\\/sub\\\\/sub\\\\/file5\\\\/?$)/, <SubSubFile />);
+
+PageRoutes.set(function(url) {
+  url === './src/writer/sub/sub/file5'
+}, dynamic(() => import('./src/writer/sub/sub/file5'), { loading: () => <Loader /> }));
 
 
 /**
@@ -36,10 +46,10 @@ PageRoutes.set(/(^\\\\/?.\\\\/src\\\\/writer\\\\/sub\\\\/sub\\\\/file5\\\\/?$)/,
  * @param {String} path - Url to be evaluated
  */
 
-function getPageComponent(path) {
+async function getPageComponent(path) {
   let component = null;
-  for (const [re, val] of PageRoutes.entries()) {
-    if(re.exec(path)) {
+  for await (const [re, val] of PageRoutes.entries()) {
+    if(re(path)) {
       component = val
       break;
     }
@@ -69,10 +79,10 @@ const PageRoutes = new Map();
  * @param {String} path - Url to be evaluated
  */
 
-function getPageComponent(path) {
+async function getPageComponent(path) {
   let component = null;
-  for (const [re, val] of PageRoutes.entries()) {
-    if(re.exec(path)) {
+  for await (const [re, val] of PageRoutes.entries()) {
+    if(re(path)) {
       component = val
       break;
     }

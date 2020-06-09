@@ -56,11 +56,15 @@
   },
   "config": {
     "next-modal-pages-loader": {
-      "searchDir": [
-        "./modalPages/pages"
+      "searchDir": "./modalPages/pages",
+      "groupByDir": [
+        "home",
+        "activity",
+        "[test].js",
+        "fakeDir"
       ],
       "pattern": "**/*.js",
-      "outputFile": "./modal_pages/routes.js"
+      "outputDir": "./modal_pages"
     }
   }
 }

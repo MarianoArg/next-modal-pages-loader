@@ -21,8 +21,8 @@ const args = require('yargs')
         "Pattern to search the search directories with. Note: if pattern contains '**/*' it must be escaped with quotes",
       type: 'string',
     },
-    outputFile: {
-      desc: 'Path to the output file.',
+    outputDir: {
+      desc: 'Path to the output folder.',
       type: 'string',
     },
     silent: {

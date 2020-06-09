@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const isDynamicRoute = require('./isDynamic');
 
 /**
  * Determines if the path is prefixed or not
@@ -81,9 +82,9 @@ const getComponentName = filePath => {
  *
  * @param {String} uri - url to be parsed as a regex
  */
-
-const getPageUrl = uri =>
-  uri
+const getUrlRegex = uri => {
+  const regexRoute = uri
+    .replace(/^\//g, '')
     .split('/')
     .map((str, index, arr) => {
       if (str.startsWith('[') && str.endsWith(']')) {
@@ -108,6 +109,9 @@ const getPageUrl = uri =>
     })
     .join('');
 
+  return new RegExp(regexRoute);
+};
+
 /**
  * Converts a path into a relative path
  *
@@ -128,20 +132,22 @@ const getPageData = (file, fromDir) => {
       base: baseName !== 'index' ? baseName : '',
     })
     .replace(reg, '')
-    .replace(/^\/|\/$/g, '');
+    .replace(/\/$/g, '');
   const componentName = getComponentName(uri);
-  const url = new RegExp(getPageUrl(uri));
+  const isDynamic = isDynamicRoute(uri);
+  const url = isDynamic ? getUrlRegex(uri) : `'${uri}'`;
 
   return {
     relativePath,
     baseName,
     url,
+    isDynamic,
     componentName,
   };
 };
 
 module.exports = {
-  getPageUrl,
+  getUrlRegex,
   getRelativePath,
   ensureFileDirectoryExists,
   formatPath,

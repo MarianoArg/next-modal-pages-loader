@@ -5,30 +5,69 @@ import dynamic from 'next/dynamic';
 
 const PageRoutes = new Map();
 
-// Detail/Type/Id
-const DetailTypeId = dynamic(() =>
-  import('../modalPages/pages/activity/detail/[type]/[id]')
-);
+// Test
+
 PageRoutes.set(
-  /(\/\/activity\/detail\/)([a-zA-Z0-9]+\/)([a-zA-Z0-9]+\/?)$/,
-  <DetailTypeId />
+  function(url) {
+    return /(^\/?[a-zA-Z0-9]+\/?)$/.exec(url);
+  },
+  dynamic(() => import('../modalPages/pages/[test]'))
+);
+
+// Detail/Type/Id
+
+PageRoutes.set(
+  function(url) {
+    return /(^\/?activity\/detail\/)([a-zA-Z0-9]+\/)([a-zA-Z0-9]+\/?)$/.exec(
+      url
+    );
+  },
+  dynamic(() => import('../modalPages/pages/activity/detail/[type]/[id]'))
 );
 
 // Activity
-const Activity = dynamic(() => import('../modalPages/pages/activity/index'));
-PageRoutes.set(/(\/\/activity\/?$)/, <Activity />);
+
+PageRoutes.set(
+  function(url) {
+    url === '/activity';
+  },
+  dynamic(() => import('../modalPages/pages/activity/index'))
+);
 
 // Home
-const Home = dynamic(() => import('../modalPages/pages/home/index'));
-PageRoutes.set(/(\/\/home\/?$)/, <Home />);
+
+PageRoutes.set(
+  function(url) {
+    url === '/home';
+  },
+  dynamic(() => import('../modalPages/pages/home/index'))
+);
 
 // Pages/Product/Type
-const PagesProductType = dynamic(() =>
-  import('../modalPages/pages/home/pages/[product]/[type]')
-);
+
 PageRoutes.set(
-  /(\/\/home\/pages\/)([a-zA-Z0-9]+\/)([a-zA-Z0-9]+\/?)$/,
-  <PagesProductType />
+  function(url) {
+    return /(^\/?home\/pages\/)([a-zA-Z0-9]+\/)([a-zA-Z0-9]+\/?)$/.exec(url);
+  },
+  dynamic(() => import('../modalPages/pages/home/pages/[product]/[type]'))
 );
 
+/**
+ * Evaluates a given path with the RegEx to find a component
+ *
+ * @param {String} path - Url to be evaluated
+ */
+
+async function getPageComponent(path) {
+  let component = null;
+  for await (const [re, val] of PageRoutes.entries()) {
+    if (re(path)) {
+      component = val;
+      break;
+    }
+  }
+  return component;
+}
+
 export default PageRoutes;
+export { getPageComponent };

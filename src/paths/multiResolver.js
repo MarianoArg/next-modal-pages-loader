@@ -12,11 +12,13 @@ function getDefaultValue(setting) {
   switch (setting) {
     case 'pattern':
       return './modalPages/pages/index.js';
-    case 'outputFile':
-      return './modalPages/routes.js';
+    case 'outputDir':
+      return './modalPages';
     case 'extensions':
       return ['.js'];
     case 'searchDir':
+      return './';
+    case 'groupByDir':
       return ['./'];
     case 'loaderDir':
       return '';
@@ -40,14 +42,21 @@ function hasConfigSetting(pkg, setting) {
  * @param {string} setting setting Name of the setting to look for
  * @param {bool} ensureArray flag denoting whether to ensure the setting is an array
  */
-function getConfigSetting(pkg, setting, ensureArray) {
+function getConfigSetting(pkg, setting, ensureArray, mergeDefault) {
   if (!hasConfigSetting(pkg, setting)) {
     return null;
   }
 
   const value = pkg.config[appName][setting];
   if (ensureArray && !Array.isArray(value)) {
+    if (mergeDefault) {
+      return [...getDefaultValue(setting), ...value];
+    }
     return [value];
+  }
+
+  if (mergeDefault && Array.isArray(value)) {
+    return [...getDefaultValue(setting), ...value];
   }
 
   return value;
@@ -63,14 +72,17 @@ function getConfigSettings(packageJsonFile) {
 
   return {
     searchDir:
-      getConfigSetting(pkg, 'searchDir', true) || getDefaultValue('searchDir'),
-    outputFile:
-      getConfigSetting(pkg, 'outputFile') || getDefaultValue('outputFile'),
+      getConfigSetting(pkg, 'searchDir') || getDefaultValue('searchDir'),
+    outputDir:
+      getConfigSetting(pkg, 'outputDir') || getDefaultValue('outputDir'),
     pattern: getConfigSetting(pkg, 'pattern') || getDefaultValue('pattern'),
     loaderDir:
       getConfigSetting(pkg, 'loaderDir') || getDefaultValue('loaderDir'),
     extensions:
       getConfigSetting(pkg, 'extensions') || getDefaultValue('extensions'),
+    groupByDir:
+      getConfigSetting(pkg, 'groupByDir', true) ||
+      getDefaultValue('groupByDir'),
   };
 }
 
@@ -98,26 +110,49 @@ function resolvePaths(processDirectory, cliConfig) {
     ...getConfigSettings(packageJsonFile, baseDir),
     ...overrides,
   };
-  const outputFile = path.resolve(baseDir, config.outputFile);
+  const outputDir = path.resolve(baseDir, config.outputDir);
 
   let loaderDir = '';
   if (config.loaderDir) {
     loaderDir = path.resolve(baseDir, config.loaderDir);
     if (!fs.existsSync(loaderDir)) {
       logger.error(
-        `The file espcified in the ${'"loaderDir"'.blue} doesn't exist`
+        `The file especified in the ${'"loaderDir"'.blue} doesn't exist`
       );
     }
   }
 
+  const resolvedSearchDir = path.resolve(baseDir, config.searchDir);
+
+  let directories = [];
+  config.groupByDir.map(dirPath => {
+    try {
+      const resolvedPath = path.resolve(resolvedSearchDir, dirPath);
+      if (fs.lstatSync(resolvedPath).isDirectory()) {
+        directories.push({
+          base: config.searchDir,
+          dir: resolvedPath,
+          group: dirPath,
+        });
+      } else {
+        throw Error;
+      }
+    } catch (e) {
+      logger.error(
+        `The path ${`${dirPath}`.blue} especified in the ${
+          '"groupByDir"'.blue
+        } doesn't exist or is not a directory.`
+      );
+    }
+  });
+
   const outputFiles = [
     {
-      outputFile,
+      searchDir: config.searchDir,
+      outputDir,
       loaderDir,
-      patterns: config.searchDir.map(dir => ({
-        base: dir,
-        pattern: path.resolve(baseDir, dir, config.pattern),
-      })),
+      directories,
+      patterns: path.resolve(baseDir, config.searchDir, config.pattern),
     },
   ];
 
