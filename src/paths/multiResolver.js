@@ -125,7 +125,7 @@ function resolvePaths(processDirectory, cliConfig) {
   const resolvedSearchDir = path.resolve(baseDir, config.searchDir);
 
   let directories = [];
-  config.groupByDir.map(dirPath => {
+  config.groupByDir.forEach(dirPath => {
     try {
       const resolvedPath = path.resolve(resolvedSearchDir, dirPath);
       if (fs.lstatSync(resolvedPath).isDirectory()) {

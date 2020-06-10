@@ -56,11 +56,12 @@
   },
   "config": {
     "next-modal-pages-loader": {
-      "searchDir": "./modalPages/pages",
+      "searchDir": "./secondary_pages",
       "groupByDir": [
-        "home",
-        "activity",
-        "[test].js",
+        "user",
+        "user/account",
+        "user/activity",
+        "user/payments",
         "fakeDir"
       ],
       "pattern": "**/*.js",

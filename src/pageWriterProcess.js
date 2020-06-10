@@ -17,6 +17,7 @@ const getOuputFile = (base, dir) => {
 };
 
 const sortFiles = files => files.concat().sort();
+
 const groupFiles = (files, base) =>
   files.reduce((group, file) => {
     if (file.group) {

@@ -72,7 +72,6 @@ export { getPageComponent };
 `;
 
 const writeFile = (files, outputFile, loaderDir) => {
-  //console.log('files ', files)
   const pages = getPageStructure(path.dirname(outputFile), files).map(file => ({
     ...file,
     relativePath: file.relativePath.substring(
@@ -85,7 +84,6 @@ const writeFile = (files, outputFile, loaderDir) => {
     ? getRelativePath(loaderDir, path.dirname(outputFile))
     : '';
 
-  //console.log('pages ', pages)
   const output = template(
     pages,
     loaderFile.substring(0, loaderFile.lastIndexOf('.'))

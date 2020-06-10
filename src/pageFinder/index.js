@@ -9,12 +9,25 @@ const { formatPath } = require('../utils/pathHelper');
  */
 const loadPages = (baseDir, pattern, directories) =>
   glob.sync(pattern).map(file => {
-    const relative = directories.find(dir => file.includes(dir.dir));
+    const matches = directories.filter(dir => file.startsWith(dir.dir));
+    const relative = matches.reduce(
+      (init, el) => {
+        if (init.strLength < el.dir.length) {
+          return {
+            strLength: el.dir.length,
+            el,
+          };
+        }
+        return init;
+      },
+      { strLength: 0, el: null }
+    );
+
     return {
       baseDir,
       file: formatPath(file),
-      dir: relative ? relative.dir : baseDir,
-      group: relative ? relative.group : '',
+      dir: relative.el ? relative.el.dir : baseDir,
+      group: relative.el ? relative.el.group : '',
     };
   });
 
