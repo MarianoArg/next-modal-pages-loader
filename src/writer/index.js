@@ -42,7 +42,7 @@ ${formatter(
       .join(`/`)}
 
 PageRoutes.set(function(url) {
-  ${isDynamic ? `return ${url}.exec(url)` : `url === ${url}`}
+  ${isDynamic ? `return ${url}.exec(url)` : `return url === ${url}`}
 }, dynamic(() => import('${relativePath}')${
       loaderDir ? `, { loading: () => <Loader /> }` : ''
     }));`,
@@ -56,9 +56,9 @@ PageRoutes.set(function(url) {
  * @param {String} path - Url to be evaluated
  */
 
-async function getPageComponent(path) {
+function getPageComponent(path) {
   let component = null;
-  for await (const [re, val] of PageRoutes.entries()) {
+  for (const [re, val] of PageRoutes.entries()) {
     if(re(path)) {
       component = val
       break;
