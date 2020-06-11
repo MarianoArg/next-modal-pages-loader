@@ -40,12 +40,12 @@ ${formatter(
       .filter(Boolean)
       .slice(-3)
       .join(`/`)}
-
+const ${componentName} = dynamic(() => import('${relativePath}')${
+  loaderDir ? `, { loading: () => <Loader /> }` : ''
+}))
 PageRoutes.set(function(url) {
-  ${isDynamic ? `return ${url}.exec(url)` : `return url === ${url}`}
-}, dynamic(() => import('${relativePath}')${
-      loaderDir ? `, { loading: () => <Loader /> }` : ''
-    }));`,
+  ${isDynamic ? `return ${url}.exec(url)` : `return url === ${url}`};
+}, ${componentName};`,
   '\n'
 )}
 

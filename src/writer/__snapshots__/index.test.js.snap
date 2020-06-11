@@ -12,31 +12,31 @@ const PageRoutes = new Map();
 // Src/File
 
 PageRoutes.set(function(url) {
-  url === './src/file1'
+  return url === './src/file1'
 }, dynamic(() => import('./src/file1'), { loading: () => <Loader /> }));
 
 // Src/Sub/File
 
 PageRoutes.set(function(url) {
-  url === './src/sub/file2'
+  return url === './src/sub/file2'
 }, dynamic(() => import('./src/sub/file2'), { loading: () => <Loader /> }));
 
 // Parent/File
 
 PageRoutes.set(function(url) {
-  url === './parent/file3'
+  return url === './parent/file3'
 }, dynamic(() => import('./parent/file3'), { loading: () => <Loader /> }));
 
 // Writer/Sub/File
 
 PageRoutes.set(function(url) {
-  url === './src/writer/sub/file4'
+  return url === './src/writer/sub/file4'
 }, dynamic(() => import('./src/writer/sub/file4'), { loading: () => <Loader /> }));
 
 // Sub/Sub/File
 
 PageRoutes.set(function(url) {
-  url === './src/writer/sub/sub/file5'
+  return url === './src/writer/sub/sub/file5'
 }, dynamic(() => import('./src/writer/sub/sub/file5'), { loading: () => <Loader /> }));
 
 
@@ -46,9 +46,9 @@ PageRoutes.set(function(url) {
  * @param {String} path - Url to be evaluated
  */
 
-async function getPageComponent(path) {
+function getPageComponent(path) {
   let component = null;
-  for await (const [re, val] of PageRoutes.entries()) {
+  for (const [re, val] of PageRoutes.entries()) {
     if(re(path)) {
       component = val
       break;
@@ -79,9 +79,9 @@ const PageRoutes = new Map();
  * @param {String} path - Url to be evaluated
  */
 
-async function getPageComponent(path) {
+function getPageComponent(path) {
   let component = null;
-  for await (const [re, val] of PageRoutes.entries()) {
+  for (const [re, val] of PageRoutes.entries()) {
     if(re(path)) {
       component = val
       break;
