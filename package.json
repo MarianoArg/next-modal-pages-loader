@@ -24,7 +24,7 @@
     "colors": "^1.1.2",
     "findup": "^0.1.5",
     "glob": "^7.1.1",
-    "yargs": "^16.0.0"
+    "yargs": "^16.2.0"
   },
   "scripts": {
     "test": "jest",
